@@ -11,6 +11,7 @@ public:
 	void Update();
 	void Render();
 	void Move();
+	void CheckCanGo();
 	bool IsKingDead();
 
 	bool _isWhiteTurn = true;

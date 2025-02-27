@@ -168,22 +168,28 @@ bool Board::CanGo(Piece* piece, int toX, int toY)
 			else if (abs(toX - nowX) > 1) {
 				return false; break;
 			}
-			
 			else if (toX == nowX)
 			{
 				if (_playBoard[toY][toX]->GetType() == PieceType::None)
 				{
 					return true; break;
 				}
+				else
+					return false;
 			}
 			else if (piece->GetTeam() != _playBoard[toY][toX]->GetTeam()) {
-				return true; break;
+				return false; break;
 			}
+			else
+				return true;
 		}
 		else
 		{
 			return true;
 		}
+		break;
+	default : 
+		return false;
 		break;
 	}
 }
@@ -194,9 +200,9 @@ void Board::MovePiece(int fromX, int fromY, int toX, int toY)
 	_playBoard[toY][toX]->SetShape(prev->GetShape());
 	_playBoard[toY][toX]->SetTeam(prev->GetTeam());
 	_playBoard[toY][toX]->SetType(prev->GetType());
-
+	
 	_playBoard[fromY][fromX]->SetShape(32);
-	_renderBoard[15 - 2 * fromY][2 + 3 * fromX]->SetShape(32);
+	_renderBoard[15 - 2 * fromY][1 + 3 * fromX + 1]->SetShape(32);
 	_playBoard[fromY][fromX]->SetTeam(Team::None);
 	_playBoard[fromY][fromX]->SetType(PieceType::None);
 

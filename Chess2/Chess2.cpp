@@ -10,7 +10,6 @@ int main()
     game->Init();
     while (1)
     {
-        
         game->Update();
         game->Render();
         game->Move();
