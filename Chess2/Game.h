@@ -12,7 +12,7 @@ public:
 	bool IsKingDead();
 
 private:
-	Board* board;
-	Player* players[2];
+	Board* _board;
+	Player* _players[2];
 };
 

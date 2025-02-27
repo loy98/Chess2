@@ -13,6 +13,7 @@ public:
 	void SetPos(Pos pos) { _pos = pos; }
 	void SetTeam(Team team) { _team = team; }
 	void SetType(PieceType type) { _type = type; }
+	virtual void CheckCanGo();
 
 private:
 	Pos _pos;
@@ -21,3 +22,11 @@ private:
 	char _shape;
 };
 
+class Pawn : public Piece
+{
+public:
+	void CheckCanGo() override;
+
+private:
+	bool isFirst = true;
+};

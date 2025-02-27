@@ -7,16 +7,16 @@ void Board::Init()
 	{
 		for (int x = 0; x < 27; ++x)
 		{
-			_board[y][x] = new Piece;
-			_board[y][x]->SetPos({ x, y });
+			_renderBoard[y][x] = new Piece;
+			_renderBoard[y][x]->SetPos({ x, y });
 		}
 	}
 	for (int y = 0; y < 8; ++y)
 	{
 		for (int x = 0; x < 8; ++x)
 		{
-			_playboard[y][x] = new Piece;
-			_playboard[y][x]->SetShape(32);
+			_playBoard[y][x] = new Piece;
+			_playBoard[y][x]->SetShape(32);
 		}
 	}
 	for (int y = 0; y < 18; ++y)
@@ -28,141 +28,87 @@ void Board::Init()
 				if (x % 3 == 0)
 				{
 					if (y % 2 == 0)
-						_board[y][x]->SetShape(32);
+						_renderBoard[y][x]->SetShape(32);
 					else
-						_board[y][x]->SetShape(124);
+						_renderBoard[y][x]->SetShape(124);
 				}
 				else if (y % 2 == 0)
 				{
-					_board[y][x]->SetShape(45);
+					_renderBoard[y][x]->SetShape(45);
 				}
 				else
-					_board[y][x]->SetShape(32);
+					_renderBoard[y][x]->SetShape(32);
 			}
 			else
-				_board[y][x]->SetShape(32);
+				_renderBoard[y][x]->SetShape(32);
 		}
 	}
 	char alphabet = 65;
 	for (int i = 1; i < 23; i += 3)
 	{
-		_board[17][i]->SetShape(alphabet);
+		_renderBoard[17][i]->SetShape(alphabet);
 		alphabet++;
 	}
 	int num = 56;
 	for (int i = 1; i < 17; i += 2)
 	{
-		_board[i][26]->SetShape(num);
+		_renderBoard[i][26]->SetShape(num);
 		num--;
 	}
 
-	_board[1][1]->SetShape('B');
-	_board[1][2]->SetShape('R');
-	_board[1][1]->SetTeam(Team::Black);
-	_board[1][1]->SetType(PieceType::Rook);
-
-	_board[1][4]->SetShape('B');
-	_board[1][5]->SetShape('N');
-	_board[1][4]->SetTeam(Team::Black);
-	_board[1][4]->SetType(PieceType::Knight);
-
-	_board[1][7]->SetShape('B');
-	_board[1][8]->SetShape('B');
-	_board[1][7]->SetTeam(Team::Black);
-	_board[1][7]->SetType(PieceType::Bishop);
-
-	_board[1][10]->SetShape('B');
-	_board[1][11]->SetShape('K');
-	_board[1][10]->SetTeam(Team::Black);
-	_board[1][10]->SetType(PieceType::King);
-
-	_board[1][13]->SetShape('B');
-	_board[1][14]->SetShape('Q');
-	_board[1][13]->SetTeam(Team::Black);
-	_board[1][13]->SetType(PieceType::Queen);
-
-	_board[1][16]->SetShape('B');
-	_board[1][17]->SetShape('B');
-	_board[1][16]->SetTeam(Team::Black);
-	_board[1][16]->SetType(PieceType::Bishop);
-
-	_board[1][19]->SetShape('B');
-	_board[1][20]->SetShape('N');
-	_board[1][19]->SetTeam(Team::Black);
-	_board[1][19]->SetType(PieceType::Knight);
-
-	_board[1][22]->SetShape('B');
-	_board[1][23]->SetShape('R');
-	_board[1][22]->SetTeam(Team::Black);
-	_board[1][22]->SetType(PieceType::Rook);
-
-	for (int i = 1; i < 25; i += 3)
+	for (int i = 0; i < 8; ++i)
 	{
-		_board[3][i]->SetShape('B');
-		_board[3][i+1]->SetShape('P');
-		_board[3][i]->SetTeam(Team::Black);
-		_board[3][i]->SetType(PieceType::Pawn);
+		_playBoard[0][i]->SetShape('B');
+		_playBoard[0][i]->SetTeam(Team::Black);
 	}
 
-	_board[15][1]->SetShape('W');
-	_board[15][2]->SetShape('R');
-	_board[15][1]->SetTeam(Team::Black);
-	_board[15][1]->SetType(PieceType::Rook);
-			
-	_board[15][4]->SetShape('W');
-	_board[15][5]->SetShape('N');
-	_board[15][4]->SetTeam(Team::White);
-	_board[15][4]->SetType(PieceType::Knight);
-			
-	_board[15][7]->SetShape('W');
-	_board[15][8]->SetShape('B');
-	_board[15][7]->SetTeam(Team::White);
-	_board[15][7]->SetType(PieceType::Bishop);
-			
-	_board[15][10]->SetShape('W');
-	_board[15][11]->SetShape('K');
-	_board[15][10]->SetTeam(Team::White);
-	_board[15][10]->SetType(PieceType::King);
-			
-	_board[15][13]->SetShape('W');
-	_board[15][14]->SetShape('Q');
-	_board[15][13]->SetTeam(Team::White);
-	_board[15][13]->SetType(PieceType::Queen);
+	
+	_playBoard[0][0]->SetType(PieceType::Rook);
+	_playBoard[0][1]->SetType(PieceType::Knight);
+	_playBoard[0][2]->SetType(PieceType::Bishop);
+	_playBoard[0][3]->SetType(PieceType::King);
+	_playBoard[0][4]->SetType(PieceType::Queen);
+	_playBoard[0][5]->SetType(PieceType::Bishop);
+	_playBoard[0][6]->SetType(PieceType::Knight);
+	_playBoard[0][7]->SetType(PieceType::Rook);
 
-	_board[15][16]->SetShape('W');
-	_board[15][17]->SetShape('B');
-	_board[15][16]->SetTeam(Team::White);
-	_board[15][16]->SetType(PieceType::Bishop);
-
-	_board[15][19]->SetShape('W');
-	_board[15][20]->SetShape('N');
-	_board[15][19]->SetTeam(Team::White);
-	_board[15][19]->SetType(PieceType::Knight);
-
-	_board[15][22]->SetShape('W');
-	_board[15][23]->SetShape('R');
-	_board[15][22]->SetTeam(Team::White);
-	_board[15][22]->SetType(PieceType::Rook);
-
-	for (int i = 1; i < 25; i += 3)
+	for (int i = 0; i < 8; ++i)
 	{
-		_board[13][i]->SetShape('W');
-		_board[13][i + 1]->SetShape('P');
-		_board[13][i]->SetTeam(Team::White);
-		_board[13][i]->SetType(PieceType::Pawn);
+		_playBoard[1][i]->SetShape('B');
+		_playBoard[1][i]->SetTeam(Team::Black);
+		_playBoard[1][i]->SetType(PieceType::Pawn);
+	}
+
+	for (int i = 0; i < 8; ++i)
+	{
+		_playBoard[7][i]->SetShape('W');
+		_playBoard[7][i]->SetTeam(Team::White);
+	}
+
+	_playBoard[7][0]->SetType(PieceType::Rook);
+	_playBoard[7][1]->SetType(PieceType::Knight);
+	_playBoard[7][2]->SetType(PieceType::Bishop);
+	_playBoard[7][3]->SetType(PieceType::King);
+	_playBoard[7][4]->SetType(PieceType::Queen);
+	_playBoard[7][5]->SetType(PieceType::Bishop);
+	_playBoard[7][6]->SetType(PieceType::Knight);
+	_playBoard[7][7]->SetType(PieceType::Rook);
+
+	for (int i = 0; i < 8; ++i)
+	{
+		_playBoard[6][i]->SetShape('W');
+		_playBoard[6][i]->SetTeam(Team::White);
+		_playBoard[6][i]->SetType(PieceType::Pawn);
 	}
 }
 
 void Board::Update()
 {
-	_playboard[1][0]->SetShape('M');
-	_playboard[3][4]->SetShape('X');
 	for (int y = 0; y < 8; ++y)
 	{
 		for (int x = 0; x < 8; ++x)
 		{
-			PieceType type = _playboard[y][y]->GetType();
-			_board[15 - 2*y][1 + 3 * x] = _playboard[y][x];
+			_renderBoard[15 - 2*y][1 + 3 * x] = _playBoard[y][x];
 		}
 	}
 }
@@ -173,7 +119,29 @@ void Board::Render()
 	{
 		for (int x = 0; x < 27; ++x)
 		{
-			cout << _board[y][x]->GetShape();
+			PieceType type = _renderBoard[y][x]->GetType();
+			cout << _renderBoard[y][x]->GetShape();
+			switch (type)
+			{
+			case PieceType::King:
+				_renderBoard[y][x + 1]->SetShape('K');
+				break;
+			case PieceType::Queen:
+				_renderBoard[y][x + 1]->SetShape('Q');
+				break;
+			case PieceType::Knight:
+				_renderBoard[y][x + 1]->SetShape('N');
+				break;
+			case PieceType::Rook:
+				_renderBoard[y][x + 1]->SetShape('R');
+				break;
+			case PieceType::Pawn:
+				_renderBoard[y][x + 1]->SetShape('P');
+				break;
+			case PieceType::Bishop:
+				_renderBoard[y][x + 1]->SetShape('B');
+				break;
+			}
 		}
 		cout << endl;
 	}

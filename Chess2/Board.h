@@ -9,7 +9,7 @@ public:
 	void Render();
 
 private:
-	Piece* _board[18][27] = {nullptr};
-	Piece* _playboard[8][8] = { nullptr };
+	Piece* _renderBoard[18][27] = {nullptr};
+	Piece* _playBoard[8][8] = { nullptr };
 };
 
