@@ -11,6 +11,14 @@ void Board::Init()
 			_board[y][x]->SetPos({ x, y });
 		}
 	}
+	for (int y = 0; y < 8; ++y)
+	{
+		for (int x = 0; x < 8; ++x)
+		{
+			_playboard[y][x] = new Piece;
+			_playboard[y][x]->SetShape(32);
+		}
+	}
 	for (int y = 0; y < 18; ++y)
 	{
 		for (int x = 0; x < 27; ++x)
@@ -143,7 +151,20 @@ void Board::Init()
 		_board[13][i]->SetTeam(Team::White);
 		_board[13][i]->SetType(PieceType::Pawn);
 	}
+}
 
+void Board::Update()
+{
+	_playboard[1][0]->SetShape('M');
+	_playboard[3][4]->SetShape('X');
+	for (int y = 0; y < 8; ++y)
+	{
+		for (int x = 0; x < 8; ++x)
+		{
+			PieceType type = _playboard[y][y]->GetType();
+			_board[15 - 2*y][1 + 3 * x] = _playboard[y][x];
+		}
+	}
 }
 
 void Board::Render()
