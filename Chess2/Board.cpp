@@ -17,6 +17,7 @@ void Board::Init()
 		{
 			_playBoard[y][x] = new Piece;
 			_playBoard[y][x]->SetShape(32);
+			_playBoard[y][x]->SetPos({ x, y });
 		}
 	}
 	for (int y = 0; y < 18; ++y)
@@ -145,4 +146,58 @@ void Board::Render()
 		}
 		cout << endl;
 	}
+}
+
+bool Board::CanGo(Piece* piece, int toX, int toY)
+{
+	int nowX = piece->GetPos().x;
+	int nowY = piece->GetPos().y;
+	PieceType type = piece->GetType();
+	Team team = piece->GetTeam();
+	switch (type)
+	{
+	case PieceType::Pawn : 
+		if (team == Team::White)
+		{
+			if (toX == nowX && toY == nowY) {
+				return false; break;
+			}
+			else if (toY - nowY != -1) {
+				return false; break;
+			}
+			else if (abs(toX - nowX) > 1) {
+				return false; break;
+			}
+			
+			else if (toX == nowX)
+			{
+				if (_playBoard[toY][toX]->GetType() == PieceType::None)
+				{
+					return true; break;
+				}
+			}
+			else if (piece->GetTeam() != _playBoard[toY][toX]->GetTeam()) {
+				return true; break;
+			}
+		}
+		else
+		{
+			return true;
+		}
+		break;
+	}
+}
+
+void Board::MovePiece(int fromX, int fromY, int toX, int toY)
+{
+	Piece* prev = _playBoard[fromY][fromX];
+	_playBoard[toY][toX]->SetShape(prev->GetShape());
+	_playBoard[toY][toX]->SetTeam(prev->GetTeam());
+	_playBoard[toY][toX]->SetType(prev->GetType());
+
+	_playBoard[fromY][fromX]->SetShape(32);
+	_renderBoard[15 - 2 * fromY][2 + 3 * fromX]->SetShape(32);
+	_playBoard[fromY][fromX]->SetTeam(Team::None);
+	_playBoard[fromY][fromX]->SetType(PieceType::None);
+
 }

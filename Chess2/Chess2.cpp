@@ -1,16 +1,21 @@
 ﻿#include <iostream>
 #include "Board.h"
-Board board;
+#include "Game.h"
 
 
 int main()
 {
-    board.Init();
+    Board board;
+    Game* game = new Game(&board);
+    game->Init();
+    while (1)
+    {
+        
+        game->Update();
+        game->Render();
+        game->Move();
+    }
+  
     
-    board.Update();
-    board.Render();
-    
-    
-
 }
 

@@ -6,13 +6,18 @@
 class Game
 {
 public:
+	Game(Board* board) :_board(board) { }
 	void Init();
 	void Update();
 	void Render();
+	void Move();
 	bool IsKingDead();
 
+	bool _isWhiteTurn = true;
 private:
 	Board* _board;
-	Player* _players[2];
+	Player* playerW = nullptr;
+	Player* playerB = nullptr;
+	
 };
 

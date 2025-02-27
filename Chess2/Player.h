@@ -6,11 +6,13 @@ class Player
 {
 public :
 	Player() {}
-	Player(Board* board): _renderBoard(board) {}
+	Player(Board* board, Team team);
+	void Update();
+	void Move();
 
 private :
 	Team _team = Team::None;
-	Piece* _pieces[16];
-	Board* _renderBoard;
+	Piece* _pieces[16] = { nullptr };
+	Board* _board;
 };
 
