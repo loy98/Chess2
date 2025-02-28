@@ -178,14 +178,46 @@ bool Board::CanGo(Piece* piece, int toX, int toY)
 					return false;
 			}
 			else if (piece->GetTeam() != _playBoard[toY][toX]->GetTeam()) {
-				return false; break;
+				return true; break;
 			}
 			else
 				return true;
 		}
 		else
 		{
-			return true;
+			if (toX == nowX && toY == nowY) {
+				return false; break;
+			}
+			else if (toY - nowY != 1) {
+				return false; break;
+			}
+			else if (abs(toX - nowX) > 1) {
+				return false; break;
+			}
+			else if (toX == nowX)
+			{
+				if (_playBoard[toY][toX]->GetType() == PieceType::None)
+				{
+					return true; break;
+				}
+				else
+					return false;
+			}
+			else if (piece->GetTeam() != _playBoard[toY][toX]->GetTeam()) {
+				return true; break;
+			}
+			else
+				return true;
+		}
+		break;
+	case PieceType::Rook:
+		if (team == Team::White)
+		{
+
+		}
+		else
+		{
+
 		}
 		break;
 	default : 
