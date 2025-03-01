@@ -49,3 +49,4 @@ void Player::ChoicePiece()
 		return;
 	}
 }
+

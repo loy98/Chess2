@@ -13,7 +13,7 @@ public:
 	Piece* GetPlayPiece(int x, int y) { return _playBoard[y][x]; }
 
 private:
-	Piece* _renderBoard[18][27] = {nullptr};
+	Piece* _renderBoard[RENDERBOARD_MAX_Y][RENDERBOARD_MAX_X] = { nullptr };
 	Piece* _playBoard[8][8] = { nullptr };
 };
 

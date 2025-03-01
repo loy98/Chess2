@@ -12,13 +12,14 @@ public:
 	void Render();
 	void Move();
 	void CheckCanGo();
-	bool IsKingDead();
-
-	bool _isWhiteTurn = true;
+	bool IsKingDead(Player* player);
+	Player* GetPlayerW() { return playerW; }
+	Player* GetPlayerB() { return playerB; }
+	
 private:
 	Board* _board;
 	Player* playerW = nullptr;
 	Player* playerB = nullptr;
-	
+	bool _isWhiteTurn = true;
 };
 

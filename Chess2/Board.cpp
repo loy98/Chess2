@@ -3,9 +3,9 @@
 using namespace std;
 void Board::Init()
 {
-	for (int y = 0; y < 18; ++y)
+	for (int y = 0; y < RENDERBOARD_MAX_Y; ++y)
 	{
-		for (int x = 0; x < 27; ++x)
+		for (int x = 0; x < RENDERBOARD_MAX_X; ++x)
 		{
 			_renderBoard[y][x] = new Piece;
 			_renderBoard[y][x]->SetPos({ x, y });
@@ -20,11 +20,11 @@ void Board::Init()
 			_playBoard[y][x]->SetPos({ x, y });
 		}
 	}
-	for (int y = 0; y < 18; ++y)
+	for (int y = 0; y < RENDERBOARD_MAX_Y; ++y)
 	{
-		for (int x = 0; x < 27; ++x)
+		for (int x = 0; x < RENDERBOARD_MAX_X; ++x)
 		{
-			if (x < 25 && y < 17)
+			if (x < RENDERBOARD_MAX_X-2 && y < 17)
 			{
 				if (x % 3 == 0)
 				{
@@ -45,15 +45,15 @@ void Board::Init()
 		}
 	}
 	char alphabet = 65;
-	for (int i = 1; i < 23; i += 3)
+	for (int i = 1; i < RENDERBOARD_MAX_X-4; i += 3)
 	{
-		_renderBoard[17][i]->SetShape(alphabet);
+		_renderBoard[RENDERBOARD_MAX_Y-1][i]->SetShape(alphabet);
 		alphabet++;
 	}
 	int num = 56;
-	for (int i = 1; i < 17; i += 2)
+	for (int i = 1; i < RENDERBOARD_MAX_Y-1; i += 2)
 	{
-		_renderBoard[i][26]->SetShape(num);
+		_renderBoard[i][RENDERBOARD_MAX_X-1]->SetShape(num);
 		num--;
 	}
 
@@ -116,9 +116,9 @@ void Board::Update()
 
 void Board::Render()
 {
-	for (int y = 0; y < 18; ++y)
+	for (int y = 0; y < RENDERBOARD_MAX_Y; ++y)
 	{
-		for (int x = 0; x < 27; ++x)
+		for (int x = 0; x < RENDERBOARD_MAX_X; ++x)
 		{
 			PieceType type = _renderBoard[y][x]->GetType();
 			cout << _renderBoard[y][x]->GetShape();
@@ -156,73 +156,183 @@ bool Board::CanGo(Piece* piece, int toX, int toY)
 	Team team = piece->GetTeam();
 	switch (type)
 	{
-	case PieceType::Pawn : 
-		if (team == Team::White)
-		{
-			if (toX == nowX && toY == nowY) {
-				return false; break;
-			}
-			else if (toY - nowY != -1) {
-				return false; break;
-			}
-			else if (abs(toX - nowX) > 1) {
-				return false; break;
-			}
-			else if (toX == nowX)
-			{
-				if (_playBoard[toY][toX]->GetType() == PieceType::None)
-				{
-					return true; break;
-				}
-				else
-					return false;
-			}
-			else if (piece->GetTeam() != _playBoard[toY][toX]->GetTeam()) {
-				return true; break;
-			}
-			else
-				return true;
-		}
-		else
-		{
-			if (toX == nowX && toY == nowY) {
-				return false; break;
-			}
-			else if (toY - nowY != 1) {
-				return false; break;
-			}
-			else if (abs(toX - nowX) > 1) {
-				return false; break;
-			}
-			else if (toX == nowX)
-			{
-				if (_playBoard[toY][toX]->GetType() == PieceType::None)
-				{
-					return true; break;
-				}
-				else
-					return false;
-			}
-			else if (piece->GetTeam() != _playBoard[toY][toX]->GetTeam()) {
-				return true; break;
-			}
-			else
-				return true;
-		}
-		break;
-	case PieceType::Rook:
-		if (team == Team::White)
-		{
+	case PieceType::Pawn: {
+		int dir = (team == Team::White) ? -1 : 1;
+		int firstY = (team == Team::White) ? 6 : 1;
 
+		//수직 전진
+		if (toX == nowX) {
+			//1칸전진
+			if (toY - nowY == dir) {
+				// 가려는 칸에 말이 있으면 이동 불가
+				if (_playBoard[toY][toX]->GetTeam() != Team::None)
+					return false;
+				else
+					return true;
+			}
+			//2칸전진 : 현재 Y가 시작할때 Y이고, 가려는곳이 두번 전진한곳일때
+			if (nowY == firstY && (toY - nowY == dir * 2)) {
+				// 1칸앞이나 2칸앞에 말이 있으면 이동 불가
+				if (_playBoard[nowY + dir][toX]->GetTeam() != Team::None ||
+					_playBoard[toY][toX]->GetTeam() != Team::None)
+					return false;
+				else
+					return true;
+			}
 		}
-		else
-		{
-
+		//대각 전진
+		if (abs(toX - nowX) == 1 && (toY - nowY == dir)) {
+			Piece* target = _playBoard[toY][toX];
+			if (target->GetTeam() != Team::None &&
+				target->GetTeam() != team)
+				return true;
+			else
+				return false;
 		}
-		break;
-	default : 
 		return false;
-		break;
+	}
+	case PieceType::Rook: {
+		// 수평 혹은 수직 이동이 아니면 이동 불가
+		if (toX != nowX && toY != nowY)
+			return false;
+		// 출발 위치와 도착 위치가 같으면 이동 불가
+		if (toX == nowX && toY == nowY)
+			return false;
+
+		// 이동 방향 설정
+		int dx = 0, dy = 0;
+		if (toX - nowX == 0) 
+			dy = (toY - nowY) / abs(toY - nowY);
+		else if (toY - nowY == 0)
+			dx = (toX - nowX) / abs(toX - nowX);
+
+		// 출발 칸 바로 다음부터 도착 칸 바로 전까지 경로에 말이 있는지 검사
+		int nextX = nowX + dx;
+		int nextY = nowY + dy;
+		while (nextX != toX || nextY != toY) {
+			if (_playBoard[nextY][nextX]->GetType() != PieceType::None)
+				return false;
+			nextX += dx;
+			nextY += dy;
+		}
+
+		// 도착 칸 검사
+		Piece* target = _playBoard[toY][toX];
+		if (target->GetTeam() == team)
+			return false;
+
+		return true;
+	}
+	case PieceType::Knight: {
+		Pos canGoPos[8] =
+		{
+			{nowX + 1, nowY + 2},
+			{nowX + 1, nowY - 2},
+			{nowX - 1, nowY + 2},
+			{nowX - 1, nowY - 2},
+			{nowX + 2, nowY + 1},
+			{nowX + 2, nowY - 1},
+			{nowX - 2, nowY + 1},
+			{nowX - 2, nowY - 1},
+		};
+		// 각 위치에 같은 팀 말이 없으면 이동가능
+		for (int i = 0; i < 8; ++i)
+		{
+			int canGoX = canGoPos[i].x;
+			int canGoY = canGoPos[i].y;
+			//입력받은 위치가 nextPos 안에 있고, 해당 위치에 우리팀 말이 없다면 이동가능
+			if ((toX == canGoX && toY == canGoY) &&
+				(_playBoard[toY][toX]->GetTeam() != team))
+				return true;
+		}
+		return false;
+	}
+	case PieceType::Bishop: {
+		// 가려는 위치가 대각선에 없으면 이동 불가
+		if (abs(toX - nowX) != abs(toY - nowY))
+			return false;
+		// 가려는 위치가 현재 위치라면 이동 불가
+		if (toX == nowX && toY == nowY)
+			return false;
+		// 이동 방향 성분
+		int dx = (toX - nowX) / abs(toX - nowX);
+		int dy = (toY - nowY) / abs(toY - nowY);
+		
+		int nextX = nowX + dx;
+		int nextY = nowY + dy;
+		// 가려는 위치 전칸 까지 한칸씩 체크
+		while (nextX != toX) {
+			// 이동중 다음칸에 말이 있으면 이동 불가
+			if (_playBoard[nextY][nextX]->GetType() != PieceType::None)
+				return false;
+			nextX += dx;
+			nextY += dy;
+		}
+		// 가려는 위치의 말이 우리말이면 이동 불가
+		Piece* target = _playBoard[toY][toX];
+		if (target->GetTeam() == team)
+			return false;
+		
+		return true;
+	}
+	case PieceType::Queen: {
+		int dx = 0, dy = 0;
+		// 가려는 위치가 현재 위치라면 이동 불가
+		if (toX == nowX && toY == nowY)
+			return false;
+		// 가려는 위치가 대각선에 있으면
+		if (abs(toX - nowX) == abs(toY - nowY)) {
+			dx = (toX - nowX) / abs(toX - nowX);
+			dy = (toY - nowY) / abs(toY - nowY);
+		}
+		// 수평 혹은 수직 이동이면 
+		else if (toX - nowX == 0)
+			dy = (toY - nowY) / abs(toY - nowY);
+		else if (toY - nowY == 0)
+			dx = (toX - nowX) / abs(toX - nowX);
+		// 위의 세 경우가 아니라면 이동 불가
+		else
+			return false;
+
+		int nextX = nowX + dx;
+		int nextY = nowY + dy;
+		while (nextX != toX || nextY != toY) {
+			if (_playBoard[nextY][nextX]->GetTeam() != Team::None)
+				return false;
+			nextX += dx;
+			nextY += dy;
+		}
+
+		Piece* target = _playBoard[toY][toX];
+		if (target->GetTeam() != team)
+			return true;
+
+		return false;
+	}
+	case PieceType::King: {
+		Pos canGoPos[8] =
+		{
+			{nowX + 1, nowY + 1},
+			{nowX + 1, nowY - 1},
+			{nowX + 1, nowY},
+			{nowX - 1, nowY + 1},
+			{nowX - 1, nowY - 1},
+			{nowX - 1, nowY},
+			{nowX, nowY + 1},
+			{nowX, nowY - 1},
+		};
+		// 각 위치에 같은 팀 말이 없으면 이동가능
+		for (int i = 0; i < 8; ++i)
+		{
+			int canGoX = canGoPos[i].x;
+			int canGoY = canGoPos[i].y;
+			//입력받은 위치가 nextPos 안에 있고, 해당 위치에 우리팀 말이 없다면 이동가능
+			if ((toX == canGoX && toY == canGoY) &&
+				(_playBoard[toY][toX]->GetTeam() != team))
+				return true;
+		}
+		return false;
+	}
 	}
 }
 

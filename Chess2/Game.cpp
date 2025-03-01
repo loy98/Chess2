@@ -27,7 +27,6 @@ void Game::Move()
 {
 	if (_isWhiteTurn)
 	{
-		
 		playerW->ChoicePiece();
 		CheckCanGo();
 		_isWhiteTurn = false;
@@ -57,13 +56,15 @@ void Game::CheckCanGo()
 	}
 	
 	char toX, toY;
-	cout << "이동시킬 위치를 입력하세요" << endl;
+	cout << "이동시킬 위치를 입력하세요 : ";
 	cin >> toX >> toY;
 	cin.clear();
 	cin.ignore();
-	if (_board->CanGo(_board->GetPlayPiece((int)(fromX - 65), (int)(fromY - 49)), (int)(toX - 65), (int)(toY - 49)))
+	int intToX = (int)(toX - 65);
+	int intToY = (int)(toY - 49);
+	if (_board->CanGo(_board->GetPlayPiece((int)(fromX - 65), (int)(fromY - 49)), intToX, intToY))
 	{
-		_board->MovePiece((int)(fromX - 65), (int)(fromY - 49), (int)(toX - 65), (int)(toY - 49));
+		_board->MovePiece((int)(fromX - 65), (int)(fromY - 49), intToX, intToY);
 		return;
 	}
 	else {
@@ -73,8 +74,14 @@ void Game::CheckCanGo()
 	}
 }
 
-bool Game::IsKingDead()
+bool Game::IsKingDead(Player* player)
 {
-	return false;
+	for (int i = 0; i < 16; ++i)
+	{
+		Piece** pieces = player->GetPieces();
+		if (pieces[i]->GetType() == PieceType::King)
+			return false;
+	}
+	return true;
 }
 

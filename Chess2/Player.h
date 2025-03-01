@@ -9,9 +9,11 @@ public :
 	Player(Board* board, Team team);
 	void Update();
 	void ChoicePiece();
+	Piece** GetPieces() { return _pieces; }
 
 	char GetFromX() { return fromX; }
 	char GetFromY() { return fromY; }
+
 private :
 	Team _team = Team::None;
 	Piece* _pieces[16] = { nullptr };
