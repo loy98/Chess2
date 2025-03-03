@@ -15,5 +15,6 @@ public:
 private:
 	Piece* _renderBoard[RENDERBOARD_MAX_Y][RENDERBOARD_MAX_X] = { nullptr };
 	Piece* _playBoard[8][8] = { nullptr };
+	
 };
 

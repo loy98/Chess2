@@ -347,5 +347,5 @@ void Board::MovePiece(int fromX, int fromY, int toX, int toY)
 	_renderBoard[15 - 2 * fromY][1 + 3 * fromX + 1]->SetShape(32);
 	_playBoard[fromY][fromX]->SetTeam(Team::None);
 	_playBoard[fromY][fromX]->SetType(PieceType::None);
-
+	
 }

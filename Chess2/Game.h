@@ -15,7 +15,9 @@ public:
 	bool IsKingDead(Player* player);
 	Player* GetPlayerW() { return playerW; }
 	Player* GetPlayerB() { return playerB; }
-	
+	bool GetIsWhiteTurn() { return _isWhiteTurn; }
+	void SetIsWhiteTurn(bool turn) { _isWhiteTurn = turn; }
+	Board* GetBoard() { return _board; }
 private:
 	Board* _board;
 	Player* playerW = nullptr;

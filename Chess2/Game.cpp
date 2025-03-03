@@ -68,7 +68,8 @@ void Game::CheckCanGo()
 		return;
 	}
 	else {
-		cout << "다시 입력하세요";
+		Render();
+		cout << "다시 입력하세요" << endl;
 		Move();
 		return;
 	}

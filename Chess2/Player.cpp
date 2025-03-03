@@ -34,16 +34,22 @@ void Player::ChoicePiece()
 	cin >> fromX >> fromY;
 	cin.clear();
 	cin.ignore();
+	int intFromX = (int)(fromX - 65);
+	int intFromY = (int)(fromY - 49);
 
 	if (fromX < 'A' || fromX > 'H' || fromY < '1' || fromY > '8')
 	{
+		system("cls");
+		_board->Render();
 		cout << "다시 입력하세요" << endl;
 		ChoicePiece();
 		return;
 	}
 		
-	if (_board->GetPlayPiece((int)(fromX-65), (int)(fromY-49))->GetTeam() != _team)
+	if (_board->GetPlayPiece(intFromX, intFromY)->GetTeam() != _team)
 	{
+		system("cls");
+		_board->Render();
 		cout << "다시 입력하세요" << endl;
 		ChoicePiece();
 		return;
